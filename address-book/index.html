@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Address Book</title>
+<meta name="description" content="Module JS1 - Exercice Icons">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,700,800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Lobster&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link href="./css/lib/normalize.css" rel="stylesheet">
+<link href="./css/lib/layout.css" rel="stylesheet">
+<link href="./css/lib/theme-corporate.css" rel="stylesheet">
+<link href="./css/address-book.css" rel="stylesheet">
+
+<script src="js/utilities.js"></script>
+<script src="js/address-book.js"></script>
+<script src="js/events.js"></script>
+</head>
+<body>
+<header class="banner">
+<a class="banner-link" href="./">
+	<strong class="banner-title">Carnet d'adresses</strong>
+	<small>Une appli front-end !</small>
+</a>
+</header>
+
+<main class="container">
+
+<header class="project-header">
+	<h1>Mon carnet d'adresses</h1>
+	<nav>
+	<button id="add-contact" class="btn btn-lg" title="Ajouter un contact">
+		<i class="fas fa-plus" aria-hidden="true"></i> Nouveau contact
+	</button>
+	</nav>
+</header>
+
+<div class="project-section">
+
+
+	<div class="bg-dark">
+	<h2>Mes contacts</h2>
+	<form>
+		<input id="contact-search" type="text" value="">
+	</form>
+	<!-- Affichage de la liste des contacts -->
+	<div id="contact-list" class="contact-list">
+	</div>
+	</div>
+
+	<!--  Bloc intégrant affichant le détail d'un contact ou le formulaire  (ne pas le cacher pour préserver la taille de la liste )-->
+	<div>
+	<div id="contact-details" class="hidden bg-dark">
+		<h2 id="contact-name"></h2>
+		<address>
+			<dl>
+			<dt>Email</dt>
+			<dd id="contact-email"></dd><br>
+			<dt>Téléphone</dt>
+			<dd id="contact-phone"></dd>
+			</dl>
+		</address>
+		<a id="contact-edit" class="btn" href="#contact-form"><i class="fas fa-user-edit"></i> Modifier</a>
+		<a id="contact-delete" class="btn" href="#"><i class="fas fa-trash-alt"></i> Supprimer</a>
+	</div>
+
+	<!-- Formulaire de saisie/modification d'un contact -->
+	<form id="contact-form" class="hidden bg-dark">
+		<fieldset>
+		<legend>Saisie/modification d'un contact</legend>
+		<ul class="field-list">
+			<li>
+			<label for="firstname">Prénom</label>
+			<input id="firstname" type="text" name="firstname" required>
+			</li>
+			<li>
+			<label for="lastname">Nom</label>
+			<input id="lastname" type="text" name="lastname" required>
+			</li>
+			<li>
+			<label for="phone">Téléphone</label>
+			<input id="phone" type="text" name="phone" maxlength="10" required>
+			</li>
+			<li>
+			<label for="email">Email</label>
+			<input id="email" type="email" name="email">
+			</li>
+		</ul>
+		<p class="text-right">
+			<button type="button" class="btn" id="save-contact">Enregistrer</button>
+		</p>
+
+		</fieldset>
+	</form>
+	</div>
+</div>
+
+</main>
+
+<footer id="mentions" class="mentions">
+<p><strong> &copy; Olivier Meunier - Tous&nbsp;droits&nbsp;réservés</strong>
+</footer>
+
+<!-- Affichage du support -->
+<script src=".resources/js/resources.js" data-md=".resources/statement.md"></script>
+
+<!-- Code principal JavaScript -->
+<script src="js/main.js"></script>
+<script src="https://kit.fontawesome.com/744b3b6adf.js" crossorigin="anonymous"></script>
+</body>
+</html>
