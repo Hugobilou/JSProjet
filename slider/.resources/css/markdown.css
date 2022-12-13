@@ -1,0 +1,40 @@
+h1 {
+  margin : 0;
+  margin-left : -3em;
+  padding : 0 2em 0 3em;
+  height: 4rem;
+  line-height: 4rem;
+  background : #fff;
+  background-size: auto 80%;
+  border-radius : 0 0.5rem 0.5rem 0;
+  font-size : 2rem;
+  text-align: left;
+  font-weight: lighter;
+  color : rgb(222, 88, 51);
+  text-transform: uppercase;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+}
+
+a {
+	color: #ef4036;
+}
+
+pre {
+  margin-bottom : 5em;
+}
+
+code {
+  overflow: auto;
+  margin : 1em;
+  padding : 1rem;
+  border : 5px solid #555;
+	background: #000;
+  color: white;
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	text-align: left;
+	white-space: nowrap;
+	line-height: 1.5;
+	tab-size: 1;
+	hyphens: none;
+}

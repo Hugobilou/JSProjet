@@ -1,0 +1,99 @@
+/* ***************************************************************************************
+	LAYOUT GLOBAL Objectifs et supports
+  Voir markdown.css pour rendu HTML <- MD
+******************************************************************************************* */
+body {
+	position: relative;
+	min-height : 100vh;
+	display : flex;
+	flex-direction: column;
+}
+
+body > * {
+	order : 3;
+}
+
+.banner,
+body > header {
+	order : 1;
+}
+
+.resources {
+	order : 2;
+	width : 0;
+	height : 0;
+	background : white;
+	transition: transform 0.5s;
+	transform : scaleY(0);
+	transform-origin: top;
+}
+
+.resources.is-open {
+	width : 100%;
+	height : auto;
+	padding : 2em;
+	transform : scaleY(1);
+	transition: transform 0.5s;
+}
+
+.resources-toggle {
+	position: fixed;
+	z-index : 10000;
+  top : 1.5em; right : 1.5em;
+	cursor: pointer;
+  user-select: none;
+
+	background : none;
+	border : none;
+
+	will-change: transform;
+	transition: transform 0.5s, top 0.5s;
+
+	transform-origin : right top;
+
+}
+
+.resources-toggle:hover {
+	transform: scale(1.5);
+}
+
+.resources-toggle[aria-pressed=true] {
+	top : 10rem;
+	outline: none;
+}
+
+
+.resources-toggle::after {
+  content : '';
+  display : inline-block;
+  width : 1rem;
+  height : 1rem;
+  background : currentColor;
+
+  box-shadow:
+    -1.25rem -1.25rem,
+    0 -1.25rem,
+    1.25rem -1.25rem,
+    -1.25rem 0,
+    1.25rem 0,
+    -1.25rem 1.25rem,
+    0 1.25rem,
+    1.25rem 1.25rem;
+
+  will-change: transform;
+  transition: transform 0.5s;
+}
+
+
+.resources-toggle[aria-pressed=true]::after {
+  box-shadow:
+        0 -1rem,
+        0 -2rem,
+        1rem 0,
+        -2rem 0,
+        2rem 0,
+        -1rem 0,
+        0 2rem,
+        0 1rem;
+  transform: rotate3d(0,0,1,-45deg)  scale3d(.8,.8,.8);
+}

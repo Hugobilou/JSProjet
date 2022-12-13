@@ -1,0 +1,113 @@
+/* ******************************************************* */
+/* ************** Les éléments du caroussel ************** */
+/* ******************************************************* */
+
+/* Boite à outils */
+.project-toolbar {
+  margin : 1em;
+  text-align: center;
+  font-size : 1.5em;
+}
+
+/*
+*  Embarquer figure et .slef-made-slider-correction-navigation
+*  dans un élément en position relative : .slef-made-slider-correction-layout
+*    -> les éléments enfants seront en position absolute afin d'apparaître sur la photo :
+*
+*       1 - liens précédent et suivant (.next,.prev)
+*       2 - figcaption (.slef-made-slider-correction-legend )
+*
+*    -> la hauteur de .slef-made-slider-correction-layout sera donc celle des photos
+*/
+
+.slider-layout {
+  position : relative;
+}
+
+.slider-figure {
+  display : none;
+  margin : 0 6em;
+  padding : 1rem;
+  border-radius : 1rem;
+  background : rgba(255,255,255,0.8);
+  box-shadow: 1rem 1rem 2rem rgba(0,0,0,0.5);
+  will-change: transform;
+}
+
+.slider-figure.active {
+  display : block;
+}
+
+.slider-picture {
+  border-radius : 1rem;
+}
+
+.slider-legend {
+  position : absolute;
+  left : 1rem; right :1rem; top : 1rem;
+  padding : 1rem;
+  border-radius : 1rem 1rem 0 0;
+  background : rgba(255, 255, 255, 0.5);
+  font-size : 1.6em;
+  font-weight : bold;
+}
+
+.next, .prev {
+  display: inline-block;
+  width : 2em;
+  height : 2em;
+  line-height : 2em;
+  position : absolute;
+  top : 50%;
+  transform : translateY(-50%);
+  text-align: center;
+  font-size : 3em;
+  color : white;
+}
+
+.next:hover,
+.prev:hover {
+  background-color : rgba(255,255,255,0.5);
+  color : #dd5735;
+  text-decoration: none;
+}
+
+.prev {
+  left : 0;
+}
+
+.next {
+  right : 0;
+}
+
+/**
+ * Bonus 1 - Puces
+ */
+.slider-dots {
+  position : absolute;
+  z-index : 200;
+  bottom : 1rem; left : 0; right : 0;
+  margin : 0;
+  padding : 0;
+  list-style : none;
+  text-align : center;
+}
+
+.slider-dots li {
+  display : inline-block;
+  width : 20px;
+  height : 20px;
+  margin : 0.5rem;
+  padding : 0;
+  background-color : white;
+  border : 2px solid  white;
+  box-shadow : 5px 5px 10px rgba(0,0,0,0.8);
+  border-radius : 50%;
+  cursor : pointer;
+}
+
+.slider-dots li.active div{
+  background-color: #dd5735;
+  height: 16px;
+  border-radius : 50%;
+}
