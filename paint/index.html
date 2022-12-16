@@ -10,10 +10,19 @@
 </head>
 <body>
     <nav>
-        <a id="draw-line" class="active">Line</a>
+        <a id="draw-pen" class="active">Pen</a>
+        <a id="draw-line">Line</a>
         <a id="draw-rectangle">Rectangle</a>
+        <a id="draw-circle">Circle</a>
+        <label for="fill">Fill :</label>
+        <input type="checkbox" name="fill" id="fill">
+        <label for="linewidth">Line width :</label>
+        <input type="text" name="linewidth" class="linewidth" id="linewidth" value="5">;
+        <a id="undo">Undo</a>
+        <a id="redo">Redo</a>
+        <a id="reset">Reset</a>
     </nav>
-    <canvas id="canvas" data-draw="none" data-type="line"></canvas>
+    <canvas id="canvas" data-draw="none" data-type="pen"></canvas>
     <script src="js/main.js"></script>
 </body>
 </html>

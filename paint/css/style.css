@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  height: 99vh;
-  width: 99vw;
+  height: 100vh;
+  width: 100vw;
 }
 
 nav {
@@ -19,9 +19,28 @@ nav a {
 nav a.active, nav a:hover {
   background-color: crimson;
 }
+nav a#draw-circle {
+  margin-right: auto;
+}
+nav label {
+  color: white;
+  padding: 10px;
+}
+nav input {
+  margin-right: 20px;
+}
+nav input[type=text] {
+  width: 20px;
+  height: 20px;
+  margin: auto 0;
+  text-align: center;
+}
+nav input[type=text]#linewidth {
+  margin-right: auto;
+}
 
 canvas {
   border: 1px solid #000000;
-  margin-top: 10px;
-  margin-left: 10px;
+  margin: 10px;
+  box-sizing: border-box;
 }/*# sourceMappingURL=style.css.map */
