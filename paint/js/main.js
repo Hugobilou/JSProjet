@@ -3,8 +3,10 @@ let ctx = canvas.getContext('2d');
 let history = [];
 let historyOld = [];
 let reDraw = false;
-let globalLineWidth = document.getElementById('linewidth').value;
+let globalFillColor = document.getElementById('fillColor').value;
 let globalFill = document.getElementById('fill').checked;
+let globalOutlineColor = document.getElementById('outlineColor').value;
+let globalLineWidth = document.getElementById('linewidth').value;
 
 
 
@@ -19,25 +21,53 @@ function viewportChange(){
     for (const draw of history){
         for (let element in draw){
             if (element == 'type') continue;
-            else if (element == 'initY' || element == 'y') draw[element] = draw[element] * heightDiff; 
-            else if (element == 'initX' || element == 'x') draw[element] = draw[element] * widthDiff;
-            draw[element] = Math.floor(draw[element] * 100) / 100;
+            else if (Array.isArray(draw[element])){
+                for (let i = 0; i < draw[element].length; i++){
+                    if (element == 'initY' || element == 'y') draw[element][i] = draw[element][i] * heightDiff;
+                    else if (element == 'initX' || element == 'x') draw[element][i] = draw[element][i] * widthDiff;
+                    draw[element][i] = Math.floor(draw[element][i] * 100) / 100;
+                }
+            }
+            else if (typeof(draw[element]) == 'number'){
+                if (element == 'initY' || element == 'y') draw[element] = draw[element] * heightDiff; 
+                else if (element == 'initX' || element == 'x') draw[element] = draw[element] * widthDiff;
+                draw[element] = Math.floor(draw[element] * 100) / 100;
+            } 
         }
     }
     for (const draw of historyOld){
         for (let element in draw){
             if (element == 'type') continue;
-            else if (element == 'initY' || element == 'y') draw[element] = draw[element] * heightDiff; 
-            else if (element == 'initX' || element == 'x') draw[element] = draw[element] * widthDiff;
-            else if (element == 'r') draw[element] = draw[element] * (heightDiff * widthDiff);
+            else if (Array.isArray(draw[element])){
+                for (let i = 0; i < draw[element].length; i++){
+                    if (element == 'initY' || element == 'y') draw[element][i] = draw[element][i] * heightDiff;
+                    else if (element == 'initX' || element == 'x') draw[element][i] = draw[element][i] * widthDiff;
+                    draw[element][i] = Math.floor(draw[element][i] * 100) / 100;
+                }
+            }
+            else if (typeof(draw[element]) == 'number'){
+                if (element == 'initY' || element == 'y') draw[element] = draw[element] * heightDiff; 
+                else if (element == 'initX' || element == 'x') draw[element] = draw[element] * widthDiff;
+                draw[element] = Math.floor(draw[element] * 100) / 100;
+            } 
         }
     }
 
     undo(true);
 }
 
+function fillColorRefresh(event){
+    globalFillColor = document.getElementById('fillColor').value;
+    event.currentTarget.style.backgroundColor = globalFillColor;
+}
+
+function outlineColorRefresh(event){
+    globalOutlineColor = document.getElementById('outlineColor').value;
+    event.currentTarget.style.backgroundColor = globalOutlineColor;
+}
+
 function lineWidthRefresh(){
-   globalLineWidth = document.getElementById('linewidth').value;
+    globalLineWidth = document.getElementById('linewidth').value;
 }
 
 function fillRefresh(){
@@ -122,7 +152,7 @@ function draw(event){
     }
 }
 
-function drawPen(event, clientX = event.clientX - canvas.offsetLeft, clientY = event.clientY - canvas.offsetTop, lineWidth = globalLineWidth){
+function drawPen(event, clientX = event.clientX - canvas.offsetLeft, clientY = event.clientY - canvas.offsetTop, outlineColor = globalOutlineColor, lineWidth = globalLineWidth){
     if (canvas.dataset.draw == 'none'){
         ctx.beginPath();
         ctx.moveTo(clientX, clientY);
@@ -142,6 +172,7 @@ function drawPen(event, clientX = event.clientX - canvas.offsetLeft, clientY = e
     }
     else if (canvas.dataset.draw == 'drawing'){
         ctx.lineTo(clientX, clientY);
+        ctx.strokeStyle = outlineColor;
         ctx.lineWidth = lineWidth;
         ctx.stroke();
         ctx.closePath();
@@ -151,30 +182,24 @@ function drawPen(event, clientX = event.clientX - canvas.offsetLeft, clientY = e
             canvas.removeEventListener('mousemove', drawPenMouseMove);
             history[history.length-1].x.push(clientX);
             history[history.length-1].y.push(clientY);
+            history[history.length-1].outlineColor = outlineColor;
             history[history.length-1].lineWidth = lineWidth;
         }
     }
 }
 
 function drawPenMouseMove(event, clientX = event.clientX - canvas.offsetLeft, clientY = event.clientY - canvas.offsetTop){
-    // ctx.lineTo(clientX, clientY);
-    // ctx.lineWidth = globalLineWidth;
-    // ctx.stroke();
-    // ctx.closePath();
     history[history.length-1].x.push(clientX);
     history[history.length-1].y.push(clientY);
     history[history.length-1].lineWidth = globalLineWidth;
     undo(true);
     canvas.dataset.draw = 'drawing';
-    // ctx.beginPath();
-    // ctx.moveTo(clientX, clientY);
-    // ctx.lineWidth = globalLineWidth;
     history[history.length-1].initX.push(clientX);
     history[history.length-1].initY.push(clientY);
 }
 
 
-function drawLine(event, clientX = event.clientX - canvas.offsetLeft, clientY = event.clientY - canvas.offsetTop, lineWidth = globalLineWidth){
+function drawLine(event, clientX = event.clientX - canvas.offsetLeft, clientY = event.clientY - canvas.offsetTop, outlineColor = globalOutlineColor, lineWidth = globalLineWidth){
     if (canvas.dataset.draw == 'none'){
         ctx.beginPath();
         ctx.lineCap = 'round';
@@ -194,6 +219,7 @@ function drawLine(event, clientX = event.clientX - canvas.offsetLeft, clientY = 
     }
     else if (canvas.dataset.draw == 'drawing'){
         ctx.lineTo(clientX, clientY);
+        ctx.strokeStyle = outlineColor;
         ctx.lineWidth = lineWidth;
         ctx.stroke();
         ctx.closePath();
@@ -203,6 +229,7 @@ function drawLine(event, clientX = event.clientX - canvas.offsetLeft, clientY = 
             canvas.removeEventListener('mousemove', drawLineMouseMove);
             history[history.length-1].x = clientX;
             history[history.length-1].y = clientY;
+            history[history.length-1].outlineColor = outlineColor;
             history[history.length-1].lineWidth = lineWidth;
         }
     }
@@ -215,12 +242,14 @@ function drawLineMouseMove(event, clientX = event.clientX - canvas.offsetLeft, c
     ctx.closePath();
     history[history.length-1].x = clientX;
     history[history.length-1].y = clientY;
+    history[history.length-1].fillColor = globalFillColor;
+    history[history.length-1].outlineColor = globalOutlineColor;
     history[history.length-1].lineWidth = globalLineWidth;
     undo(true);
     canvas.dataset.draw = 'drawing';
 }
 
-function drawRectangle(event, clientX = event.clientX - canvas.offsetLeft, clientY = event.clientY - canvas.offsetTop, lineWidth = globalLineWidth, fill = globalFill, drawTab = history[history.length-1]){
+function drawRectangle(event, clientX = event.clientX - canvas.offsetLeft, clientY = event.clientY - canvas.offsetTop, fillColor = globalFillColor, outlineColor = globalOutlineColor, lineWidth = globalLineWidth, fill = globalFill, drawTab = history[history.length-1]){
     if (canvas.dataset.draw == 'none'){
         ctx.beginPath();
         canvas.dataset.draw = 'drawing';
@@ -237,6 +266,8 @@ function drawRectangle(event, clientX = event.clientX - canvas.offsetLeft, clien
     }
     else if (canvas.dataset.draw == 'drawing'){
         ctx.rect(drawTab.initX, drawTab.initY, clientX - drawTab.initX, clientY - drawTab.initY);
+        ctx.fillStyle = fillColor;
+        ctx.strokeStyle = outlineColor;
         ctx.lineWidth = lineWidth;
         if (fill) ctx.fill();
         ctx.stroke();
@@ -247,8 +278,10 @@ function drawRectangle(event, clientX = event.clientX - canvas.offsetLeft, clien
             document.querySelector('canvas').style.cursor = 'default';
             history[history.length-1].x = clientX;
             history[history.length-1].y = clientY;
-            history[history.length-1].fill = fill;
+            history[history.length-1].fillColor = fillColor;
+            history[history.length-1].outlineColor = outlineColor;
             history[history.length-1].lineWidth = lineWidth;
+            history[history.length-1].fill = fill;
         }
     }
 }
@@ -260,13 +293,15 @@ function drawRectangleMouseMove(event, clientX = event.clientX - canvas.offsetLe
     ctx.stroke();
     history[history.length-1].x = clientX;
     history[history.length-1].y = clientY;
-    history[history.length-1].fill = globalFill;
+    history[history.length-1].fillColor = globalFillColor;
+    history[history.length-1].outlineColor = globalOutlineColor;
     history[history.length-1].lineWidth = globalLineWidth;
+    history[history.length-1].fill = globalFill;
     undo(true);
     canvas.dataset.draw = 'drawing'
 }
 
-function drawCircle(event, clientX = event.clientX - canvas.offsetLeft, clientY = event.clientY - canvas.offsetTop, lineWidth = globalLineWidth, fill = globalFill, drawTab = history[history.length-1]){
+function drawCircle(event, clientX = event.clientX - canvas.offsetLeft, clientY = event.clientY - canvas.offsetTop, fillColor = globalFillColor, outlineColor = globalOutlineColor, lineWidth = globalLineWidth, fill = globalFill, drawTab = history[history.length-1]){
     if (canvas.dataset.draw == 'none'){
         ctx.beginPath();
         canvas.dataset.draw = 'drawing';
@@ -284,6 +319,8 @@ function drawCircle(event, clientX = event.clientX - canvas.offsetLeft, clientY 
     else if (canvas.dataset.draw == 'drawing'){
         let r = Math.floor(Math.sqrt(Math.pow((clientX - drawTab.initX), 2) + Math.pow((clientY - drawTab.initY), 2)));
         ctx.arc(drawTab.initX, drawTab.initY, r, 0, 2 * Math.PI);
+        ctx.fillStyle = fillColor;
+        ctx.strokeStyle = outlineColor;
         ctx.lineWidth = lineWidth;
         if (fill) ctx.fill();
         ctx.stroke();
@@ -294,8 +331,10 @@ function drawCircle(event, clientX = event.clientX - canvas.offsetLeft, clientY 
             document.querySelector('canvas').style.cursor = 'default';
             history[history.length-1].x = clientX;
             history[history.length-1].y = clientY;
-            history[history.length-1].fill = fill;
+            history[history.length-1].fillColor = fillColor;
+            history[history.length-1].outlineColor = outlineColor;
             history[history.length-1].lineWidth = lineWidth;
+            history[history.length-1].fill = fill;
             undo(true);
         }
     }
@@ -309,9 +348,12 @@ function drawCircleMouseMove(event, clientX = event.clientX - canvas.offsetLeft,
     ctx.stroke();
     history[history.length-1].x = clientX;
     history[history.length-1].y = clientY;
-    history[history.length-1].fill = globalFill;
+    history[history.length-1].fillColor = globalFillColor;
+    history[history.length-1].outlineColor = globalOutlineColor;
     history[history.length-1].lineWidth = globalLineWidth;
+    history[history.length-1].fill = globalFill;
     undo(true);
+    ctx.lineCap = 'round';
     ctx.moveTo(history[history.length-1].initX, history[history.length-1].initY);
     ctx.lineTo(clientX, clientY);
     ctx.stroke();
@@ -325,21 +367,21 @@ function undo(refresh = false){
     if(!refresh) history.pop();
     for (let i = 0; i < history.length; i++){
         if (history[i].type == 'line'){
-            drawLine(null, history[i].initX, history[i].initY, history[i].lineWidth);
-            drawLine(null, history[i].x, history[i].y, history[i].lineWidth);
+            drawLine(null, history[i].initX, history[i].initY, history[i].outlineColor, history[i].lineWidth);
+            drawLine(null, history[i].x, history[i].y, history[i].outlineColor, history[i].lineWidth);
         }
         else if (history[i].type == 'rectangle'){
-            drawRectangle(null, history[i].initX, history[i].initY, history[i].lineWidth, history[i].fill, history[i]);
-            drawRectangle(null, history[i].x, history[i].y, history[i].lineWidth, history[i].fill, history[i]);
+            drawRectangle(null, history[i].initX, history[i].initY, history[i].fillColor, history[i].outlineColor, history[i].lineWidth, history[i].fill, history[i]);
+            drawRectangle(null, history[i].x, history[i].y, history[i].fillColor, history[i].outlineColor, history[i].lineWidth, history[i].fill, history[i]);
         }
         else if (history[i].type == 'circle'){
-            drawCircle(null, history[i].initX, history[i].initY, history[i].lineWidth, history[i].fill, history[i]);
-            drawCircle(null, history[i].x, history[i].y, history[i].lineWidth, history[i].fill, history[i]);
+            drawCircle(null, history[i].initX, history[i].initY, history[i].fillColor, history[i].outlineColor, history[i].lineWidth, history[i].fill, history[i]);
+            drawCircle(null, history[i].x, history[i].y, history[i].fillColor, history[i].outlineColor, history[i].lineWidth, history[i].fill, history[i]);
         }
         else if (history[i].type == 'pen'){
             for (let j = 0; j < history[i].initX.length-1; j++){
-                drawLine(null, history[i].initX[j], history[i].initY[j], history[i].lineWidth);
-                drawLine(null, history[i].x[j], history[i].y[j], history[i].lineWidth);
+                drawLine(null, history[i].initX[j], history[i].initY[j], history[i].outlineColor, history[i].lineWidth);
+                drawLine(null, history[i].x[j], history[i].y[j], history[i].outlineColor, history[i].lineWidth);
             }
         }
     }
@@ -352,21 +394,21 @@ function redo(){
     reDraw = true;
     for (let i = 0; i <= history.length; i++){
         if (historyOld[i].type == 'line'){
-            drawLine(null, historyOld[i].initX, historyOld[i].initY, historyOld[i].lineWidth);
-            drawLine(null, historyOld[i].x, historyOld[i].y, historyOld[i].lineWidth);
+            drawLine(null, historyOld[i].initX, historyOld[i].initY, historyOld[i].outlineColor, historyOld[i].lineWidth);
+            drawLine(null, historyOld[i].x, historyOld[i].y, historyOld[i].outlineColor, historyOld[i].lineWidth);
         }
         else if (historyOld[i].type == 'rectangle'){
-            drawRectangle(null, historyOld[i].initX, historyOld[i].initY, historyOld[i].lineWidth, historyOld[i].fill, historyOld[i]);
-            drawRectangle(null, historyOld[i].x, historyOld[i].y, historyOld[i].lineWidth, historyOld[i].fill, historyOld[i]);
+            drawRectangle(null, historyOld[i].initX, historyOld[i].initY, historyOld[i].fillColor, historyOld[i].outlineColor, historyOld[i].lineWidth, historyOld[i].fill, historyOld[i]);
+            drawRectangle(null, historyOld[i].x, historyOld[i].y, historyOld[i].fillColor, historyOld[i].outlineColor, historyOld[i].lineWidth, historyOld[i].fill, historyOld[i]);
         }
         else if (historyOld[i].type == 'circle'){
-            drawCircle(null, historyOld[i].initX, historyOld[i].initY, historyOld[i].lineWidth, historyOld[i].fill, historyOld[i]);
-            drawCircle(null, historyOld[i].x, historyOld[i].y, historyOld[i].lineWidth, historyOld[i].fill, historyOld[i]);
+            drawCircle(null, historyOld[i].initX, historyOld[i].initY, historyOld[i].fillColor, historyOld[i].outlineColor, historyOld[i].lineWidth, historyOld[i].fill, historyOld[i]);
+            drawCircle(null, historyOld[i].x, historyOld[i].y, historyOld[i].fillColor, historyOld[i].outlineColor, historyOld[i].lineWidth, historyOld[i].fill, historyOld[i]);
         }
         else if (historyOld[i].type == 'pen'){
             for (let j = 0; j < historyOld[i].initX.length-1; j++){
-                drawLine(null, historyOld[i].initX[j], historyOld[i].initY[j], historyOld[i].lineWidth);
-                drawLine(null, historyOld[i].x[j], historyOld[i].y[j], historyOld[i].lineWidth);
+                drawLine(null, historyOld[i].initX[j], historyOld[i].initY[j], historyOld[i].outlineColor, historyOld[i].lineWidth);
+                drawLine(null, historyOld[i].x[j], historyOld[i].y[j], historyOld[i].outlineColor, historyOld[i].lineWidth);
             }
         }
     }
@@ -374,10 +416,14 @@ function redo(){
 }
 
 
+
+
 viewportChange();
 window.addEventListener('resize', viewportChange);
 document.getElementById('canvas').addEventListener('click', draw);
 document.querySelector('nav').addEventListener('click', navEvent);
 document.addEventListener('keyup', keydown);
-document.getElementById('linewidth').addEventListener('change', lineWidthRefresh);
+document.getElementById('fillColor').addEventListener('change', fillColorRefresh);
+document.getElementById('outlineColor').addEventListener('change', outlineColorRefresh);
 document.getElementById('fill').addEventListener('change', fillRefresh);
+document.getElementById('linewidth').addEventListener('change', lineWidthRefresh);
