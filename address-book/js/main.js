@@ -85,7 +85,7 @@ function onClickEditContact(event){
 }
 
 function onClickDeleteContact(){
-    let index = document.getElementById('contact-details');
+    let index = document.getElementById('contact-details').dataset.index;
     window.localStorage.removeItem(index);
     document.querySelector('#contact-details').classList.add('hidden');
     document.querySelector('#contact-form').classList.add('hidden');
@@ -102,7 +102,7 @@ document.getElementById('save-contact').addEventListener('click', onClickSaveCon
 document.getElementById('contact-list').addEventListener('click', onClickContact);
 document.getElementById('contact-edit').addEventListener('click', onClickEditContact);
 document.getElementById('contact-delete').addEventListener('click', onClickDeleteContact);
-document.getElementById('contact-search').addEventListener('change', refreshContactList);
+document.getElementById('contact-search').addEventListener('keyup', refreshContactList);
 
 // Rafraîchissement de la liste des contacts sur la page HTML
 refreshContactList();
