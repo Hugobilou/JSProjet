@@ -42,14 +42,12 @@ function play(){
 }
 
 function random(){
-    let active = document.querySelector('.active');
-    let nbr = Number(active.children[0].src.match(/[1-9]/));
+    let nbr = Number(document.querySelector('.active').children[0].src.match(/[1-9]/));
     let rand;
     do{
         rand = Math.floor(Math.random() * (document.querySelectorAll('.slider-figure').length) + 1);
     }while (rand == nbr)
-    active.classList.remove('active');
-    document.querySelectorAll('.slider-figure')[rand-1].classList.add('active');
+    next(rand);
 }
 
 function puce(){
